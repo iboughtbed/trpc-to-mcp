@@ -13,11 +13,18 @@
     "vercel"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup ./src",
     "dev": "tsup --watch",
     "release": "pnpm run build && changeset publish",
     "format": "prettier --write \"**/*.{ts,tsx,css,md}\"",
     "lint": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iboughtbed/trpc-to-mcp.git"
   },
   "exports": {
     ".": {
