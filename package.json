@@ -57,14 +57,14 @@
         "default": "./dist/tools.js"
       }
     },
-    "./adapter/vercel-mcp-adapter": {
+    "./adapters/vercel-mcp-adapter": {
       "import": {
-        "types": "./dist/adapter/vercel-mcp-adapter.d.ts",
-        "default": "./dist/adapter/vercel-mcp-adapter.mjs"
+        "types": "./dist/adapters/vercel-mcp-adapter.d.ts",
+        "default": "./dist/adapters/vercel-mcp-adapter.mjs"
       },
       "require": {
-        "types": "./dist/adapter/vercel-mcp-adapter.d.ts",
-        "default": "./dist/adapter/vercel-mcp-adapter.js"
+        "types": "./dist/adapters/vercel-mcp-adapter.d.ts",
+        "default": "./dist/adapters/vercel-mcp-adapter.js"
       }
     }
   },
