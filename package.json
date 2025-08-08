@@ -2,21 +2,68 @@
   "name": "trpc-to-mcp",
   "license": "MIT",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup ./src/index.ts --format cjs,esm --dts",
+    "build": "tsup --config tsup.config.ts",
     "release": "pnpm run build && changeset publish",
+    "format": "prettier --write \"**/*.{ts,tsx,css,md}\"",
     "lint": "tsc"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./server": {
+      "import": {
+        "types": "./dist/server.d.ts",
+        "default": "./dist/server.mjs"
+      },
+      "require": {
+        "types": "./dist/server.d.ts",
+        "default": "./dist/server.js"
+      }
+    },
+    "./tools": {
+      "import": {
+        "types": "./dist/tools.d.ts",
+        "default": "./dist/tools.mjs"
+      },
+      "require": {
+        "types": "./dist/tools.d.ts",
+        "default": "./dist/tools.js"
+      }
+    },
+    "./adapter/vercel-mcp-adapter": {
+      "import": {
+        "types": "./dist/adapter/vercel-mcp-adapter.d.ts",
+        "default": "./dist/adapter/vercel-mcp-adapter.mjs"
+      },
+      "require": {
+        "types": "./dist/adapter/vercel-mcp-adapter.d.ts",
+        "default": "./dist/adapter/vercel-mcp-adapter.js"
+      }
+    }
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
+    "@ianvs/prettier-plugin-sort-imports": "^4.6.0",
+    "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "@trpc/server": "^11.4.4",
+    "better-auth": "^1.3.4",
+    "mcp-handler": "^1.0.1",
     "zod": "^4.0.15"
   },
   "dependencies": {

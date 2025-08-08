@@ -1,38 +1,25 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
-  type Implementation,
   ListToolsRequestSchema,
+  type Implementation,
 } from "@modelcontextprotocol/sdk/types.js";
 import type {
   AnyProcedure,
   AnyRootTypes,
+  DecorateRouterRecord,
+  MaybePromise,
   Router,
   RouterRecord,
 } from "@trpc/server/unstable-core-do-not-import";
 
-import { extractToolsFromProcedures } from "./tools";
+import { extractToolsFromProcedures, type McpTool } from "./tools";
 
-type MaybePromise<T> = Promise<T> | T;
-
-export function createMcpServer<
-  TRoot extends AnyRootTypes,
-  TRecord extends RouterRecord
->(
-  implementation: Implementation,
-  appRouter: Router<TRoot, TRecord>,
-  ctx: TRoot["ctx"] | (() => MaybePromise<TRoot["ctx"]>)
+export function setRequestHandler<TRecord extends RouterRecord>(
+  server: Server,
+  tools: McpTool[],
+  trpcCaller: DecorateRouterRecord<TRecord>,
 ) {
-  const tools = extractToolsFromProcedures(appRouter);
-  const trpcCaller = appRouter.createCaller(ctx);
-
-  const server = new Server(implementation, {
-    capabilities: {
-      // Leave it empty because we list tools manually
-      tools: {},
-    },
-  });
-
   // List all of the available tools
   server.setRequestHandler(ListToolsRequestSchema, () => ({ tools }));
 
@@ -50,7 +37,7 @@ export function createMcpServer<
     const procedure: AnyProcedure = tool.pathInRouter.reduce(
       // @ts-expect-error path in router
       (acc, part) => acc?.[part],
-      trpcCaller
+      trpcCaller,
     );
 
     // @ts-expect-error path in router
@@ -60,4 +47,27 @@ export function createMcpServer<
       content: [{ type: "text", text: JSON.stringify(result) }],
     };
   });
+}
+
+export function createMcpServer<
+  TRoot extends AnyRootTypes,
+  TRecord extends RouterRecord,
+>(
+  implementation: Implementation,
+  appRouter: Router<TRoot, TRecord>,
+  ctx: TRoot["ctx"] | (() => MaybePromise<TRoot["ctx"]>),
+) {
+  const tools = extractToolsFromProcedures(appRouter);
+  const trpcCaller = appRouter.createCaller(ctx);
+
+  const server = new Server(implementation, {
+    capabilities: {
+      // Leave it empty because we list tools manually
+      tools: {},
+    },
+  });
+
+  setRequestHandler(server, tools, trpcCaller);
+
+  return server;
 }
