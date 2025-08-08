@@ -24,7 +24,7 @@ export function mergeInputs(inputs: z.ZodObject[]) {
 
 export function extractToolsFromProcedures<
   TRoot extends AnyRootTypes,
-  TRecord extends RouterRecord
+  TRecord extends RouterRecord,
 >(appRouter: Router<TRoot, TRecord>, currentPath: string[] = []) {
   const tools: McpTool[] = [];
   const procedures = Object.entries(appRouter._def.procedures);
@@ -57,7 +57,7 @@ export function extractToolsFromProcedures<
         } else {
           console.error(
             "[TRPC-TO-MCP] Procedure has no object schema",
-            pathInRouter
+            pathInRouter,
           );
         }
       } else {

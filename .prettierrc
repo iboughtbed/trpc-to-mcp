@@ -1,0 +1,12 @@
+{
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^[../]",
+    "^[./]"
+  ],
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrderCaseSensitive": true,
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"]
+}
