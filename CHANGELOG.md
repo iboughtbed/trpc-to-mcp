@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.1.4
+
+### Patch Changes
+
+- cc4b23c: fix: misspelled filename
+
 ## 1.1.3
 
 ### Patch Changes
