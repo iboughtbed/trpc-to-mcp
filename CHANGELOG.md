@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.2.0
+
+### Minor Changes
+
+- 2edd505: return high-level McpServer instead of low-level Server in createMcpServer
+
 ## 1.1.5
 
 ### Patch Changes
