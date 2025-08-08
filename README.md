@@ -1,3 +1,18 @@
+## Introduction
+
+You can skip this part if you know exactly why you're turning your tRPC endpoints into MCP tools.
+
+<details>
+<summary>How to think of MCPs</summary>
+
+At its core, the Model Context Protocol (MCP) gives language models a context to interact with external systems by exposing well-defined tools. This isn't about wrapping API endpoints- it's about enabling AI to perform tasks with clarity and purpose.
+
+This library was created to convert only the tRPC procedures you explicitly choose into MCP tools. By doing so, it ensures that only the functionalities intended for controlled AI interaction are exposed, rather than indiscriminately converting all endpoints.
+
+Remember, for an endpoint to be effectively transformed into an MCP tool, it should be meticulously documented with clear descriptions, meaningful names, and well-defined inputs/outputs. This careful design is crucial because MCP tools are more than mere API endpoints - they form the operational contexts that enable language models to function reliably.
+
+</details>
+
 ## tRPC to MCP
 
 - Support for tRPC v11
