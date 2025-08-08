@@ -92,7 +92,8 @@ const ctx = {
   },
 };
 
-const server = createMcpServer(
+// Returns high-level McpServer instance
+const mcpServer = createMcpServer(
   implementation, // Pass your Implementation instance
   appRouter,
   ctx, // Pass your tRPC context
@@ -118,7 +119,7 @@ const handler = trpcToHandler(appRouter, ctx, {
   // @vercel/mcp-adapter server options
   serverOptions: { ... },
   callback: (server) => {
-    // You can modify the server instance
+    // You can modify the McpServer instance
   }
 });
 
