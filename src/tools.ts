@@ -72,3 +72,5 @@ export function extractToolsFromProcedures<
 
   return tools;
 }
+
+export type { McpMeta } from "./types";
