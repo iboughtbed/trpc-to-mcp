@@ -1,4 +1,5 @@
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
 import type {
   AnyRootTypes,
   MaybePromise,
@@ -23,7 +24,7 @@ export function trpcToMcpHandler<
   handlerOptions: {
     config: McpHandlerConfig;
     serverOptions?: McpServerOptions;
-    callback?: (server: Server) => unknown;
+    callback?: (server: McpServer) => unknown;
   },
 ) {
   const { serverOptions, config, callback } = handlerOptions;
@@ -36,7 +37,7 @@ export function trpcToMcpHandler<
       setRequestHandler(server.server, tools, trpcCaller);
 
       if (typeof callback === "function") {
-        callback(server.server);
+        callback(server);
       }
     },
     {
