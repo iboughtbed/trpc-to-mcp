@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.1.2
+
+### Patch Changes
+
+- e8f84b7: fix tsup not building dist
+
 ## 1.1.1
 
 ### Patch Changes
