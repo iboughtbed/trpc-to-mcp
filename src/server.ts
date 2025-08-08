@@ -1,4 +1,5 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -60,14 +61,14 @@ export function createMcpServer<
   const tools = extractToolsFromProcedures(appRouter);
   const trpcCaller = appRouter.createCaller(ctx);
 
-  const server = new Server(implementation, {
+  const server = new McpServer(implementation, {
     capabilities: {
       // Leave it empty because we list tools manually
       tools: {},
     },
   });
 
-  setRequestHandler(server, tools, trpcCaller);
+  setRequestHandler(server.server, tools, trpcCaller);
 
   return server;
 }
