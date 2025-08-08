@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.1.3
+
+### Patch Changes
+
+- 55bf8ec: fix: include dist in package.json files
+
 ## 1.1.2
 
 ### Patch Changes
