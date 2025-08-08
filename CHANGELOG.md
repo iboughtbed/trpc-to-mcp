@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.1.5
+
+### Patch Changes
+
+- 9da2b1a: fix: export mcp meta type
+
 ## 1.1.4
 
 ### Patch Changes
