@@ -5,8 +5,16 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "description": "tRPC to MCP adapter",
+  "keywords": [
+    "trpc",
+    "mcp",
+    "modelcontextprotocol",
+    "vercel"
+  ],
   "scripts": {
-    "build": "tsup --config tsup.config.ts",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "release": "pnpm run build && changeset publish",
     "format": "prettier --write \"**/*.{ts,tsx,css,md}\"",
     "lint": "tsc"
