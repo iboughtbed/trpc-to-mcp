@@ -15,6 +15,7 @@ import type {
 } from "@trpc/server/unstable-core-do-not-import";
 
 import { extractToolsFromProcedures, type McpTool } from "./tools";
+import type { McpMeta } from "./types";
 
 export function setRequestHandler<TRecord extends RouterRecord>(
   server: Server,
@@ -41,12 +42,24 @@ export function setRequestHandler<TRecord extends RouterRecord>(
       trpcCaller,
     );
 
-    // @ts-expect-error path in router
-    const result = await procedure(args);
+    const meta = procedure.meta as McpMeta | undefined;
+    const transformMcpProcedure = meta?.mcp?.transformMcpProcedure;
 
-    return {
-      content: [{ type: "text", text: JSON.stringify(result) }],
-    };
+    if (typeof transformMcpProcedure === "function") {
+      // @ts-expect-error path in router
+      const result = await transformMcpProcedure(procedure(args));
+
+      return {
+        content: result,
+      };
+    } else {
+      // @ts-expect-error path in router
+      const result = await procedure(args);
+
+      return {
+        content: [{ type: "text", text: JSON.stringify(result) }],
+      };
+    }
   });
 }
 

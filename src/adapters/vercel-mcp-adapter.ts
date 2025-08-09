@@ -1,4 +1,3 @@
-import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
 import type {
   AnyRootTypes,

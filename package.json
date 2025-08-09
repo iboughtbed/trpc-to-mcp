@@ -57,6 +57,26 @@
         "default": "./dist/tools.js"
       }
     },
+    "./helpers": {
+      "import": {
+        "types": "./dist/helpers.d.ts",
+        "default": "./dist/helpers.mjs"
+      },
+      "require": {
+        "types": "./dist/helpers.d.ts",
+        "default": "./dist/helpers.js"
+      }
+    },
+    "./types": {
+      "import": {
+        "types": "./dist/types.d.ts",
+        "default": "./dist/types.mjs"
+      },
+      "require": {
+        "types": "./dist/types.d.ts",
+        "default": "./dist/types.js"
+      }
+    },
     "./adapters/vercel-mcp-adapter": {
       "import": {
         "types": "./dist/adapters/vercel-mcp-adapter.d.ts",
