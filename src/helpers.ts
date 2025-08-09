@@ -12,7 +12,7 @@ export function transformMcpProcedure<TProcedure extends AnyProcedure>(
   ) => MaybePromise<ContentBlock[]>,
 ) {
   if (procedure.meta?.mcp?.enabled) {
-    procedure.meta.transformMcpProcedure = callback;
+    procedure.meta.mcp.transformMcpProcedure = callback;
   }
 
   return procedure;
