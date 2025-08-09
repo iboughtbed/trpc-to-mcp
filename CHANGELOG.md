@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.3.0
+
+### Minor Changes
+
+- 2a6a592: feat: create a helper to transform procedure outputs to human language
+
 ## 1.2.0
 
 ### Minor Changes
