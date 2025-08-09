@@ -16,6 +16,7 @@ Remember, for an endpoint to be effectively transformed into an MCP tool, it sho
 ## tRPC to MCP
 
 - Support for tRPC v11
+- [Transform your JSON outputs into human-language with custom helpers](#transform-output)
 - [Turn your tRPC router into MCP tools](#to-mcp-tools)
 - [Turn your tRPC router into MCP server](#to-mcp-server)
 - [Turn your tRPC router into @vercel/mcp-adapter handler](#to-vercel-mcp-adapter)
@@ -65,6 +66,69 @@ export const appRouter = t.router({
     .query(({ input }) => {
       return { greeting: `Hello ${input.name}` };
     }),
+});
+```
+
+## Transform Outputs
+
+If you need a human-language outputs for LLMs to have a better context, you can use `transformMcpProcedure`
+
+You simply wrap your procedure with the helper function, and provide a transformer callback function that turns your procedure output into `ContentBlock[]` array compatible with MCP content output.
+
+```typescript
+import { initTRPC } from "@trpc/server";
+import { z } from "zod";
+
+import { transformMcpProcedure, type McpMeta } from "../src";
+
+const t = initTRPC.meta<McpMeta>().create();
+
+export const appRouter = t.router({
+  procedure: transformMcpProcedure(
+    t.procedure
+      .meta({
+        mcp: {
+          enabled: true,
+          description: "Send a message",
+          name: "send_message",
+        },
+      })
+      .input(
+        z.object({
+          message: z.string(),
+        }),
+      )
+      .query(({ input }) => {
+        return {
+          payload: {
+            from: "trpc",
+            message: input.message,
+            array: [{ a: 1 }, { b: 2 }],
+          },
+        };
+      }),
+    (output) => {
+      return [
+        ...output.payload.array.map((item) => {
+          const [name, value] = Object.entries(item);
+          return {
+            type: "text" as const,
+            text: `${name} is ${value} letter of alphabet`,
+          };
+        }),
+        {
+          type: "image",
+          data: "...",
+          mimeType: "",
+        },
+        {
+          type: "audio", // or even "resource" | "resource_link"
+          data: "...",
+          mimeType: "",
+        },
+      ];
+    },
+  ),
 });
 ```
 
