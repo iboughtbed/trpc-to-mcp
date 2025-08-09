@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.3.2
+
+### Patch Changes
+
+- 2081ba3: fix: transformer function being undefined and not receiving output
+
 ## 1.3.1
 
 ### Patch Changes
