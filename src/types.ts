@@ -10,8 +10,10 @@ export type McpMeta = {
     enabled?: boolean;
     description?: string;
     name?: string;
-    transformMcpProcedure?: (
-      output: inferProcedureOutput<AnyProcedure>,
-    ) => MaybePromise<ContentBlock[]>;
+    transformMcpProcedure?: TransformMcpProcedureFunction;
   };
 };
+
+export type TransformMcpProcedureFunction = (
+  output: inferProcedureOutput<AnyProcedure>,
+) => MaybePromise<ContentBlock[]>;

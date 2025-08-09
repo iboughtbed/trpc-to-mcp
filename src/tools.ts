@@ -7,13 +7,14 @@ import type {
 } from "@trpc/server/unstable-core-do-not-import";
 import { z } from "zod/v4";
 
-import type { McpMeta } from "./types";
+import type { McpMeta, TransformMcpProcedureFunction } from "./types";
 
 export type McpTool = {
   name: string;
   description: string;
   pathInRouter: string[];
   inputSchema?: z.core.JSONSchema.JSONSchema;
+  transformMcpProcedure?: TransformMcpProcedureFunction;
 };
 
 export function mergeInputs(inputs: z.ZodObject[]) {
@@ -44,6 +45,7 @@ export function extractToolsFromProcedures<
         name: meta?.mcp?.name ?? name.replace(/\./g, "_"),
         description: meta?.mcp?.description ?? "",
         pathInRouter,
+        transformMcpProcedure: meta?.mcp?.transformMcpProcedure,
       };
 
       if (schema) {
