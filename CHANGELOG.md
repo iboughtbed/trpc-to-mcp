@@ -1,5 +1,11 @@
 # trpc-to-mcp
 
+## 1.3.1
+
+### Patch Changes
+
+- 639b37e: fix: incorrect path for mcp meta callback
+
 ## 1.3.0
 
 ### Minor Changes
