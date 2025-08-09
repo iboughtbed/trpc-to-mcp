@@ -16,7 +16,7 @@ Remember, for an endpoint to be effectively transformed into an MCP tool, it sho
 ## tRPC to MCP
 
 - Support for tRPC v11
-- [Transform your JSON outputs into human-language with custom helpers](#transform-output)
+- [Transform your JSON outputs into human-language with custom helpers](#transform-outputs)
 - [Turn your tRPC router into MCP tools](#to-mcp-tools)
 - [Turn your tRPC router into MCP server](#to-mcp-server)
 - [Turn your tRPC router into @vercel/mcp-adapter handler](#to-vercel-mcp-adapter)
