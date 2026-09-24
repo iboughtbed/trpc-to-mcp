@@ -6,49 +6,27 @@ import { transformMcpProcedure, type McpMeta } from "../src";
 const t = initTRPC.meta<McpMeta>().create();
 
 export const appRouter = t.router({
-  procedure: transformMcpProcedure(
+  weather: transformMcpProcedure(
     t.procedure
       .meta({
         mcp: {
           enabled: true,
-          description: "Send a message",
-          name: "send_message",
+          name: "get_weather",
+          description: "Get the current weather for a city",
         },
       })
-      .input(
-        z.object({
-          message: z.string(),
-        }),
-      )
-      .query(({ input }) => {
-        return {
-          payload: {
-            from: "trpc",
-            message: input.message,
-            array: [{ a: 1 }, { b: 2 }],
-          },
-        };
-      }),
-    (output) => {
-      return [
-        ...output.payload.array.map((item) => {
-          const [name, value] = Object.entries(item);
-          return {
-            type: "text" as const,
-            text: `${name} is ${value} letter of alphabet`,
-          };
-        }),
-        {
-          type: "image",
-          data: "...",
-          mimeType: "",
-        },
-        {
-          type: "audio", // or even "resource" | "resource_link"
-          data: "...",
-          mimeType: "",
-        },
-      ];
-    },
+      .input(z.object({ city: z.string() }))
+      .query(({ input }) => ({
+        city: input.city,
+        temperature: 21,
+        conditions: ["sunny", "windy"],
+      })),
+    // `output` is typed from the query above.
+    (output) => [
+      {
+        type: "text",
+        text: `${output.city}: ${output.temperature}°C, ${output.conditions.join(" and ")}`,
+      },
+    ],
   ),
 });

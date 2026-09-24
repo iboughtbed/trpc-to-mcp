@@ -1,4 +1,4 @@
 export * from "./server";
 export * from "./tools";
-export * from "./helpers";
+export { transformMcpProcedure } from "./helpers";
 export * from "./types";
