@@ -22,7 +22,7 @@ An MCP tool is something a language model decides to call on its own, so expose 
 pnpm add trpc-to-mcp @modelcontextprotocol/server
 ```
 
-`@trpc/server` 11 and `@modelcontextprotocol/server` 2 are peer dependencies. Node.js 20 or later is required.
+`@trpc/server` 11 and `@modelcontextprotocol/server` 2 are peer dependencies. Install `mcp-handler` 2 only if you use the [mcp-handler adapter](#mcp-handler). Node.js 20 or later is required.
 
 ## Usage
 
@@ -202,15 +202,43 @@ const tools = extractToolsFromProcedures(appRouter);
 // [{ name: "say_hello", description: "...", path: "hello", type: "query", inputSchema: {...} }]
 ```
 
+## API
+
+| Export                                         | Import from                               | Description                                                           |
+| ---------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------- |
+| `createMcpServer(info, router, ctx, options?)` | `trpc-to-mcp`                             | Creates an `McpServer` with the router's tools registered.            |
+| `registerTrpcTools(server, router, ctx)`       | `trpc-to-mcp`                             | Registers the router's tools on an existing `McpServer`.              |
+| `extractToolsFromProcedures(router)`           | `trpc-to-mcp`                             | Returns the tool definitions without a server.                        |
+| `transformMcpProcedure(procedure, transform)`  | `trpc-to-mcp`                             | Sets the MCP content a procedure's tool returns.                      |
+| `trpcToMcpHandler(router, ctx, options?)`      | `trpc-to-mcp/adapters/vercel-mcp-adapter` | Creates an mcp-handler request handler.                               |
+| `McpMeta`, `McpContext`, `McpTool`             | `trpc-to-mcp`                             | Types for procedure meta, the context argument, and tool definitions. |
+
 ## Upgrading from 1.x
 
-- Replace `@modelcontextprotocol/sdk` with `@modelcontextprotocol/server` 2, and upgrade `mcp-handler` to 2 if you use the adapter.
+- Replace `@modelcontextprotocol/sdk` with `@modelcontextprotocol/server` 2, and upgrade `mcp-handler` to 2 if you use the adapter. Node.js 20 or later is required.
 - In `trpcToMcpHandler`, remove `config`. Move `verboseLogs` into `serverOptions`, and mount the handler at the route you want.
-- Use zod 4.2 or later, or another validator with Standard JSON Schema support.
-- Replace `setRequestHandler(server.server, tools, caller)` with `registerTrpcTools(server, appRouter, ctx)`.
-- `McpTool.pathInRouter` is now `McpTool.path`, a dotted string.
+- Use zod 4.2 or later, or another validator with Standard JSON Schema support. zod is no longer a peer dependency.
+- Replace `setRequestHandler(server.server, tools, caller)` with `registerTrpcTools(server, appRouter, ctx)`. `mergeInputs` is removed.
+- In `McpTool`, `pathInRouter` is now `path`, a dotted string, and `transformMcpProcedure` is now `transform`.
+- Set output transforms with the `transformMcpProcedure()` helper. `meta.mcp.transformMcpProcedure` is removed.
+- An enabled subscription, or an enabled procedure whose input is not an object, now throws when the server starts.
 
-See [CHANGELOG.md](./CHANGELOG.md) for the full list.
+See the [2.0.0 release notes](https://github.com/iboughtbed/trpc-to-mcp/releases/tag/v2.0.0) for the full list.
+
+## Development
+
+```bash
+pnpm install
+pnpm test          # vitest
+pnpm lint          # oxlint with type-aware rules
+pnpm typecheck     # tsc
+pnpm format        # oxfmt
+pnpm build         # tsdown
+```
+
+CI runs `format:check`, `lint`, `typecheck`, `test`, and `build` on every push.
+
+To release, add a changeset with `pnpm changeset` in your pull request. After it merges, the publish workflow opens a "Version Packages" pull request that bumps the version and updates `CHANGELOG.md`. Merging that pull request publishes to npm with [trusted publishing](https://docs.npmjs.com/trusted-publishers) and creates a GitHub release. No npm token is stored in the repository.
 
 ## Result
 
