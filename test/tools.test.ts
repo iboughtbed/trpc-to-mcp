@@ -69,7 +69,7 @@ describe("extractToolsFromProcedures", () => {
   it("lists only MCP-enabled procedures, with names and merged inputs", () => {
     const tools = extractToolsFromProcedures(appRouter);
 
-    expect(tools.map((tool) => tool.name).sort()).toEqual([
+    expect(tools.map((tool) => tool.name).toSorted()).toEqual([
       "fail",
       "length",
       "say_hello",

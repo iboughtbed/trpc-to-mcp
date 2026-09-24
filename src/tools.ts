@@ -44,8 +44,13 @@ const JSON_SCHEMA_OPTIONS = {
 function hasJsonSchema(parser: unknown): parser is StandardSchemaWithJSON {
   if (typeof parser !== "object" && typeof parser !== "function") return false;
   if (parser === null || !("~standard" in parser)) return false;
-  const standard = parser["~standard"] as { jsonSchema?: unknown };
-  return typeof standard.jsonSchema === "object";
+  const standard = parser["~standard"];
+  return (
+    typeof standard === "object" &&
+    standard !== null &&
+    "jsonSchema" in standard &&
+    typeof standard.jsonSchema === "object"
+  );
 }
 
 function isObjectSchema(
@@ -103,6 +108,9 @@ export function extractToolsFromProcedures(router: AnyTRPCRouter): McpTool[] {
 
   for (const [path, procedure] of Object.entries(procedures)) {
     const { type, inputs, meta } = procedure._def;
+    // tRPC types procedure meta as `unknown`. It is `McpMeta` when the router
+    // was built with `initTRPC.meta<McpMeta>()`.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     const mcp = (meta as McpMeta | undefined)?.mcp;
     if (!mcp?.enabled) continue;
 
@@ -187,9 +195,13 @@ export function registerTrpcTools<TRouter extends AnyTRPCRouter>(
           ? await tool.transform(output)
           : [{ type: "text" as const, text: JSON.stringify(output ?? null) }];
 
-        return tool.outputSchema
-          ? { content, structuredContent: output as Record<string, unknown> }
-          : { content };
+        if (!tool.outputSchema) return { content };
+
+        // The procedure's `.output()` validator describes an object, and
+        // tRPC ran it before returning.
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+        const structuredContent = output as Record<string, unknown>;
+        return { content, structuredContent };
       },
     ),
   );

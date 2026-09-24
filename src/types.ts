@@ -39,4 +39,5 @@ export type McpContextFactory<TRouter extends AnyTRPCRouter> = (
 
 /** The tRPC context for tool calls: a fixed value or a per-call factory. */
 export type McpContext<TRouter extends AnyTRPCRouter> =
-  inferRouterContext<TRouter> | McpContextFactory<TRouter>;
+  | inferRouterContext<TRouter>
+  | McpContextFactory<TRouter>;

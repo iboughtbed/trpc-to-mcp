@@ -17,9 +17,12 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "test": "vitest run",
-    "release": "pnpm run build && changeset publish",
-    "format": "prettier --write \"**/*.{ts,tsx,css,md}\"",
-    "lint": "tsc"
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "typecheck": "tsc",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "release": "pnpm run build && changeset publish"
   },
   "files": [
     "dist"
@@ -57,13 +60,14 @@
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
-    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@modelcontextprotocol/client": "^2.1.0",
     "@modelcontextprotocol/server": "^2.1.0",
     "@trpc/server": "^11.19.0",
     "@types/node": "^24.13.6",
     "mcp-handler": "^2.2.0",
-    "prettier": "^3.9.9",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "oxlint-tsgolint": "^7.0.2002",
     "tsdown": "^0.23.0",
     "typescript": "^6.0.3",
     "vitest": "^5.0.1",
