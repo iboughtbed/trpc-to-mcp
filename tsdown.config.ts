@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: [
@@ -11,8 +11,7 @@ export default defineConfig({
   ],
   format: ["esm", "cjs"],
   dts: true,
-  splitting: true,
   sourcemap: true,
-  clean: true,
-  treeshake: true,
+  // Checks package.json exports against the build output.
+  exports: true,
 });

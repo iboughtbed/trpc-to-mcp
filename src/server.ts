@@ -1,84 +1,25 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
+  McpServer,
   type Implementation,
-} from "@modelcontextprotocol/sdk/types.js";
-import type {
-  AnyProcedure,
-  AnyRootTypes,
-  DecorateRouterRecord,
-  MaybePromise,
-  Router,
-  RouterRecord,
-} from "@trpc/server/unstable-core-do-not-import";
+  type ServerOptions,
+} from "@modelcontextprotocol/server";
+import type { AnyTRPCRouter } from "@trpc/server";
 
-import { extractToolsFromProcedures, type McpTool } from "./tools";
+import { registerTrpcTools } from "./tools";
+import type { McpContext } from "./types";
 
-export function setRequestHandler<TRecord extends RouterRecord>(
-  server: Server,
-  tools: McpTool[],
-  trpcCaller: DecorateRouterRecord<TRecord>,
-) {
-  // List all of the available tools
-  server.setRequestHandler(ListToolsRequestSchema, () => ({ tools }));
-
-  // Handle tool calls
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    const { name, arguments: args } = request.params;
-
-    const tool = tools.find((t) => t.name === name);
-
-    if (!tool) {
-      return { content: [{ type: "text", text: "Could not find tool" }] };
-    }
-
-    // @ts-expect-error path in router
-    const procedure: AnyProcedure = tool.pathInRouter.reduce(
-      // @ts-expect-error path in router
-      (acc, part) => acc?.[part],
-      trpcCaller,
-    );
-
-    if (typeof tool.transformMcpProcedure === "function") {
-      // @ts-expect-error path in router
-      const output = await procedure(args);
-      const result = await tool.transformMcpProcedure(output);
-
-      return {
-        content: result,
-      };
-    } else {
-      // @ts-expect-error path in router
-      const result = await procedure(args);
-
-      return {
-        content: [{ type: "text", text: JSON.stringify(result) }],
-      };
-    }
-  });
-}
-
-export function createMcpServer<
-  TRoot extends AnyRootTypes,
-  TRecord extends RouterRecord,
->(
+/**
+ * Creates an `McpServer` with the router's MCP-enabled procedures registered
+ * as tools. Connect it to a transport yourself, or return it from the
+ * factory you pass to the SDK's `createMcpHandler`.
+ */
+export function createMcpServer<TRouter extends AnyTRPCRouter>(
   implementation: Implementation,
-  appRouter: Router<TRoot, TRecord>,
-  ctx: TRoot["ctx"] | (() => MaybePromise<TRoot["ctx"]>),
+  router: TRouter,
+  ctx: McpContext<TRouter>,
+  options?: ServerOptions,
 ) {
-  const tools = extractToolsFromProcedures(appRouter);
-  const trpcCaller = appRouter.createCaller(ctx);
-
-  const server = new McpServer(implementation, {
-    capabilities: {
-      // Leave it empty because we list tools manually
-      tools: {},
-    },
-  });
-
-  setRequestHandler(server.server, tools, trpcCaller);
-
+  const server = new McpServer(implementation, options);
+  registerTrpcTools(server, router, ctx);
   return server;
 }

@@ -2,19 +2,21 @@
   "name": "trpc-to-mcp",
   "license": "MIT",
   "version": "1.3.2",
-  "main": "./dist/index.js",
+  "description": "Turn tRPC procedures into MCP tools",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "description": "tRPC to MCP adapter",
+  "types": "./dist/index.d.cts",
+  "sideEffects": false,
   "keywords": [
     "trpc",
     "mcp",
     "modelcontextprotocol",
-    "vercel"
+    "mcp-handler"
   ],
   "scripts": {
-    "build": "tsup ./src",
-    "dev": "tsup --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
     "release": "pnpm run build && changeset publish",
     "format": "prettier --write \"**/*.{ts,tsx,css,md}\"",
     "lint": "tsc"
@@ -28,80 +30,57 @@
   },
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
-    "./server": {
-      "import": {
-        "types": "./dist/server.d.ts",
-        "default": "./dist/server.mjs"
-      },
-      "require": {
-        "types": "./dist/server.d.ts",
-        "default": "./dist/server.js"
-      }
-    },
-    "./tools": {
-      "import": {
-        "types": "./dist/tools.d.ts",
-        "default": "./dist/tools.mjs"
-      },
-      "require": {
-        "types": "./dist/tools.d.ts",
-        "default": "./dist/tools.js"
-      }
-    },
-    "./helpers": {
-      "import": {
-        "types": "./dist/helpers.d.ts",
-        "default": "./dist/helpers.mjs"
-      },
-      "require": {
-        "types": "./dist/helpers.d.ts",
-        "default": "./dist/helpers.js"
-      }
-    },
-    "./types": {
-      "import": {
-        "types": "./dist/types.d.ts",
-        "default": "./dist/types.mjs"
-      },
-      "require": {
-        "types": "./dist/types.d.ts",
-        "default": "./dist/types.js"
-      }
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     },
     "./adapters/vercel-mcp-adapter": {
-      "import": {
-        "types": "./dist/adapters/vercel-mcp-adapter.d.ts",
-        "default": "./dist/adapters/vercel-mcp-adapter.mjs"
-      },
-      "require": {
-        "types": "./dist/adapters/vercel-mcp-adapter.d.ts",
-        "default": "./dist/adapters/vercel-mcp-adapter.js"
-      }
-    }
+      "import": "./dist/adapters/vercel-mcp-adapter.mjs",
+      "require": "./dist/adapters/vercel-mcp-adapter.cjs"
+    },
+    "./helpers": {
+      "import": "./dist/helpers.mjs",
+      "require": "./dist/helpers.cjs"
+    },
+    "./server": {
+      "import": "./dist/server.mjs",
+      "require": "./dist/server.cjs"
+    },
+    "./tools": {
+      "import": "./dist/tools.mjs",
+      "require": "./dist/tools.cjs"
+    },
+    "./types": {
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.5",
-    "@ianvs/prettier-plugin-sort-imports": "^4.6.0",
-    "prettier": "^3.6.2",
-    "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "@changesets/cli": "^3.0.3",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@modelcontextprotocol/client": "^2.1.0",
+    "@modelcontextprotocol/server": "^2.1.0",
+    "@trpc/server": "^11.19.0",
+    "@types/node": "^24.13.6",
+    "mcp-handler": "^2.2.0",
+    "prettier": "^3.9.9",
+    "tsdown": "^0.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.1",
+    "zod": "^4.6.5"
   },
   "peerDependencies": {
-    "@trpc/server": "^11.4.4",
-    "better-auth": "^1.3.4",
-    "mcp-handler": "^1.0.1",
-    "zod": "^4.0.15"
+    "@modelcontextprotocol/server": "^2.0.0",
+    "@trpc/server": "^11.0.0",
+    "mcp-handler": "^2.0.0"
   },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.2"
-  }
+  "peerDependenciesMeta": {
+    "mcp-handler": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.20.0"
 }
